@@ -106,7 +106,8 @@ export const formatLastSync = (lastSync, options = {}) => {
   return date.toLocaleDateString(opts.locale, {
     year: 'numeric',
     month: 'short',
-    day: 'numeric',
+    day: 'numeric'
+  }) + ' ' + date.toLocaleTimeString(opts.locale, {
     hour: '2-digit',
     minute: '2-digit'
   });

@@ -129,7 +129,7 @@ export async function saveGoogleAnalyticsCredentials(
 export async function getGoogleAdsCredentials(clientSlug: string): Promise<GoogleAdsCredentials | null> {
   try {
     
-    const client = await Client.findOne({ slug: clientSlug });
+    const client = await (Client as any).findOne({ slug: clientSlug });
     if (!client?.googleAds?.encryptedCredentials) {
       return null;
     }
@@ -148,7 +148,7 @@ export async function getGoogleAdsCredentials(clientSlug: string): Promise<Googl
 export async function getFacebookAdsCredentials(clientSlug: string): Promise<FacebookAdsCredentials | null> {
   try {
     
-    const client = await Client.findOne({ slug: clientSlug });
+    const client = await (Client as any).findOne({ slug: clientSlug });
     if (!client?.facebookAds?.encryptedCredentials) {
       return null;
     }
@@ -166,12 +166,10 @@ export async function getFacebookAdsCredentials(clientSlug: string): Promise<Fac
  */
 export async function getGoogleAnalyticsCredentials(clientSlug: string): Promise<GoogleAnalyticsCredentials | null> {
   try {
-    
-    const client = await Client.findOne({ slug: clientSlug });
-    if (!client?.googleAnalytics?.encryptedCredentials) {
+    const client = await (Client as any).findOne({ slug: clientSlug }).lean();
+    if (!client || !client.googleAnalytics || !client.googleAnalytics.encryptedCredentials) {
       return null;
     }
-    
     const credentials = decryptCredentials(client.googleAnalytics.encryptedCredentials);
     return credentials as GoogleAnalyticsCredentials;
   } catch (error) {
@@ -337,7 +335,7 @@ export async function getClientAPIStatus(clientSlug: string): Promise<{
 }> {
   try {
     
-    const client = await Client.findOne({ slug: clientSlug });
+    const client = await (Client as any).findOne({ slug: clientSlug });
     if (!client) {
       throw new Error('Cliente não encontrado');
     }
