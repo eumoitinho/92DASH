@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createFacebookAdsClient, getFacebookDateRange } from '@/lib/facebook-ads';
 import { withCache, generateCacheKey } from '@/lib/cache';
 import { connectToDatabase, Client } from '@/lib/mongodb';
+import { decryptData } from '@/lib/encryption';
 import type { APIResponse, CampaignMetrics, Campaign } from '@/types/dashboard';
 
 /**
@@ -35,7 +36,7 @@ export async function GET(
     }
 
     // Check if Facebook Ads is configured for this client
-    if (!clientData.facebookAds?.accountId) {
+    if (!clientData.facebookAds?.accountId || !clientData.facebookAds?.credentials) {
       return NextResponse.json<APIResponse<null>>({
         success: false,
         error: 'FACEBOOK_ADS_NOT_CONFIGURED',
@@ -44,11 +45,21 @@ export async function GET(
       }, { status: 400 });
     }
 
+    // Decrypt client credentials
+    let credentials;
+    try {
+      credentials = JSON.parse(decryptData(clientData.facebookAds.credentials));
+    } catch (error) {
+      return NextResponse.json<APIResponse<null>>({
+        success: false,
+        error: 'FACEBOOK_CREDENTIALS_ERROR',
+        message: 'Failed to decrypt Facebook credentials',
+        timestamp: new Date().toISOString(),
+      }, { status: 500 });
+    }
 
     // Validate API configuration
-    if (!process.env.FACEBOOK_APP_ID || 
-        !process.env.FACEBOOK_APP_SECRET || 
-        !process.env.FACEBOOK_ACCESS_TOKEN) {
+    if (!process.env.FACEBOOK_APP_ID || !process.env.FACEBOOK_APP_SECRET) {
       return NextResponse.json<APIResponse<null>>({
         success: false,
         error: 'FACEBOOK_ADS_CONFIG_MISSING',
@@ -60,10 +71,11 @@ export async function GET(
     // Get date range
     const dateRange = getFacebookDateRange(period);
     
-    // Create Facebook Ads client
+    // Create Facebook Ads client with client-specific credentials
     const facebookAdsClient = createFacebookAdsClient(
       clientData.facebookAds.accountId, 
-      clientData.facebookAds.pixelId
+      clientData.facebookAds.pixelId,
+      credentials
     );
 
     // Generate cache key
@@ -143,7 +155,7 @@ export async function POST(
     }
 
     // Check if Facebook Ads is configured for this client
-    if (!clientData.facebookAds?.accountId) {
+    if (!clientData.facebookAds?.accountId || !clientData.facebookAds?.credentials) {
       return NextResponse.json<APIResponse<null>>({
         success: false,
         error: 'FACEBOOK_ADS_NOT_CONFIGURED',
@@ -152,10 +164,24 @@ export async function POST(
       }, { status: 400 });
     }
 
-    // Create Facebook Ads client and test connection
+    // Decrypt client credentials
+    let credentials;
+    try {
+      credentials = JSON.parse(decryptData(clientData.facebookAds.credentials));
+    } catch (error) {
+      return NextResponse.json<APIResponse<null>>({
+        success: false,
+        error: 'FACEBOOK_CREDENTIALS_ERROR',
+        message: 'Failed to decrypt Facebook credentials',
+        timestamp: new Date().toISOString(),
+      }, { status: 500 });
+    }
+
+    // Create Facebook Ads client with client-specific credentials and test connection
     const facebookAdsClient = createFacebookAdsClient(
       clientData.facebookAds.accountId, 
-      clientData.facebookAds.pixelId
+      clientData.facebookAds.pixelId,
+      credentials
     );
     const isConnected = await facebookAdsClient.testConnection();
 
