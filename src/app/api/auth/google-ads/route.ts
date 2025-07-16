@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { google } from 'googleapis';
-import { prisma } from '@/lib/mongodb';
 
 // OAuth2 setup for Google Ads
 const oauth2Client = new google.auth.OAuth2(
