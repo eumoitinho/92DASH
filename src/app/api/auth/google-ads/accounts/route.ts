@@ -152,13 +152,8 @@ export async function GET(request: NextRequest) {
     if (error.code === 401 || error.message?.includes('invalid_grant')) {
       const clientSlug = new URL(request.url).searchParams.get('clientSlug');
       if (clientSlug) {
-        await //prisma.client.update({
-          where: { slug: clientSlug },
-          data: {
-            googleAdsConnected: false,
-            googleAdsCredentials: null
-          }
-        });
+        // TODO: Implementar limpeza de conexão quando MongoDB estiver configurado
+        console.log('Token expirado para cliente:', clientSlug);
       }
     }
     

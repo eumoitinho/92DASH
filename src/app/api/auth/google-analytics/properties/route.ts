@@ -17,10 +17,9 @@ export async function GET(request: NextRequest) {
       }, { status: 400 });
     }
 
-    // Buscar cliente e suas credenciais
-    const client = await //prisma.client.findUnique({
-      where: { slug: clientSlug }
-    });
+    // TODO: Buscar cliente e suas credenciais quando MongoDB estiver configurado
+    // const client = await Client.findOne({ slug: clientSlug });
+    const client = { slug: clientSlug, googleAnalyticsConnected: true, googleAnalyticsCredentials: '{}' }; // Mock para build
 
     if (!client || !client.googleAnalyticsConnected || !client.googleAnalyticsCredentials) {
       return NextResponse.json({
@@ -69,13 +68,17 @@ export async function GET(request: NextRequest) {
     if (error.code === 401) {
       const clientSlug = new URL(request.url).searchParams.get('clientSlug');
       if (clientSlug) {
-        await //prisma.client.update({
-          where: { slug: clientSlug },
-          data: {
-            googleAnalyticsConnected: false,
-            googleAnalyticsCredentials: null
+        // TODO: Limpar conexão quando MongoDB estiver configurado
+        /*
+        await Client.findOneAndUpdate(
+          { slug: clientSlug },
+          {
+            'googleAnalytics.connected': false,
+            'googleAnalytics.encryptedCredentials': null
           }
-        });
+        );
+        */
+        console.log('Token expirado para cliente:', clientSlug);
       }
     }
     

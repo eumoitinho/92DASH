@@ -47,21 +47,25 @@ export async function GET(request: NextRequest) {
       console.warn('Não foi possível listar propriedades:', propError);
     }
 
-    // Salvar tokens no banco de dados (criptografados)
-    const client = await //prisma.client.update({
-      where: { slug: state },
-      data: {
-        googleAnalyticsConnected: true,
-        googleAnalyticsLastSync: new Date(),
-        googleAnalyticsCredentials: JSON.stringify({
+    // TODO: Salvar tokens no banco de dados (criptografados) quando MongoDB estiver configurado
+    /*
+    const client = await Client.findOneAndUpdate(
+      { slug: state },
+      {
+        'googleAnalytics.connected': true,
+        'googleAnalytics.lastSync': new Date(),
+        'googleAnalytics.encryptedCredentials': JSON.stringify({
           access_token: tokens.access_token,
           refresh_token: tokens.refresh_token,
           token_type: tokens.token_type,
           expiry_date: tokens.expiry_date,
           scope: tokens.scope
         })
-      }
-    });
+      },
+      { new: true }
+    );
+    */
+    const client = { slug: state }; // Mock para build
 
     console.log('✅ Google Analytics conectado para cliente:', state);
     console.log('📊 Propriedades encontradas:', properties.length);

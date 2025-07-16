@@ -24,10 +24,9 @@ export async function GET(request: NextRequest) {
       }, { status: 400 });
     }
 
-    // Verificar se o cliente existe
-    const client = await //prisma.client.findUnique({
-      where: { slug: clientSlug }
-    });
+    // TODO: Verificar se o cliente existe quando MongoDB estiver configurado
+    // const client = await Client.findOne({ slug: clientSlug });
+    const client = { slug: clientSlug }; // Mock para build
 
     if (!client) {
       return NextResponse.json({

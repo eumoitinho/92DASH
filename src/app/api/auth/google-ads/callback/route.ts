@@ -61,21 +61,25 @@ export async function GET(request: NextRequest) {
       // Não é um erro crítico, apenas registramos
     }
 
-    // Salvar tokens no banco de dados (criptografados)
-    const client = await //prisma.client.update({
-      where: { slug: state },
-      data: {
-        googleAdsConnected: true,
-        googleAdsLastSync: new Date(),
-        googleAdsCredentials: JSON.stringify({
+    // TODO: Salvar tokens no banco de dados (criptografados) quando MongoDB estiver configurado
+    /*
+    const client = await Client.findOneAndUpdate(
+      { slug: state },
+      {
+        'googleAds.connected': true,
+        'googleAds.lastSync': new Date(),
+        'googleAds.encryptedCredentials': JSON.stringify({
           access_token: tokens.access_token,
           refresh_token: tokens.refresh_token,
           token_type: tokens.token_type,
           expiry_date: tokens.expiry_date,
           scope: tokens.scope
         })
-      }
-    });
+      },
+      { new: true }
+    );
+    */
+    const client = { slug: state }; // Mock para build
 
     console.log('✅ Google Ads conectado para cliente:', state);
     console.log('🎯 Contas encontradas:', customerAccounts.length);
