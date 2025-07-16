@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/mongodb';
 
 /**
  * GET /api/auth/google-ads/accounts?clientSlug=client-name

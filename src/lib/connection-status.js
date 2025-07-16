@@ -104,8 +104,11 @@ export const formatLastSync = (lastSync, options = {}) => {
   if (isNaN(date.getTime())) return opts.noSyncText;
 
   return date.toLocaleDateString(opts.locale, {
-    dateStyle: opts.dateStyle,
-    timeStyle: opts.timeStyle
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
   });
 };
 
