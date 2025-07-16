@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Icon } from "@iconify/react/dist/iconify.js";
 import Link from 'next/link';
+import { getConnectionStatusIcon, formatLastSync } from '@/lib/connection-status';
 
 const ClientList = () => {
   const [clients, setClients] = useState([]);
@@ -45,18 +46,11 @@ const ClientList = () => {
   };
 
   const getConnectionStatus = (connected) => {
-    return connected ? (
-      <Icon icon="solar:check-circle-bold" className="text-primary text-xl" />
-    ) : (
-      <Icon icon="solar:close-circle-bold" className="text-primary-700 text-xl" />
-    );
+    return getConnectionStatusIcon(connected);
   };
 
   const formatDate = (dateString) => {
-    if (!dateString) return 'Não sincronizado';
-    
-    const date = new Date(dateString);
-    return date.toLocaleDateString('pt-BR');
+    return formatLastSync(dateString);
   };
 
   const formatCurrency = (value) => {

@@ -3,6 +3,12 @@ import React, { useState, useEffect } from 'react';
 import { Icon } from "@iconify/react/dist/iconify.js";
 import Link from 'next/link';
 import LoadingSpinner from './LoadingSpinner';
+import { 
+  getConnectionStatusBadge, 
+  getLastSyncDate, 
+  formatLastSync,
+  countConnectedPlatforms 
+} from '@/lib/connection-status';
 
 const DashboardsList = () => {
   const [clients, setClients] = useState([]);
@@ -83,17 +89,7 @@ const DashboardsList = () => {
   };
 
   const getConnectionBadge = (connected, label) => {
-    return connected ? (
-      <span className="badge bg-success-subtle text-success-main">
-        <Icon icon="solar:check-circle-bold" className="me-1" />
-        {label}
-      </span>
-    ) : (
-      <span className="badge bg-danger-subtle text-danger-main">
-        <Icon icon="solar:close-circle-bold" className="me-1" />
-        {label}
-      </span>
-    );
+    return getConnectionStatusBadge(connected, label);
   };
 
   const formatDate = (dateString) => {
@@ -111,9 +107,9 @@ const DashboardsList = () => {
 
   const getLastSyncDate = (client) => {
     const dates = [
-      client.googleAnalyticsLastSync,
-      client.googleAdsLastSync,
-      client.facebookAdsLastSync
+      client.googleAnalytics?.lastSync,
+      client.googleAds?.lastSync,
+      client.facebookAds?.lastSync
     ].filter(date => date);
     
     if (dates.length === 0) return null;
@@ -262,9 +258,9 @@ const DashboardsList = () => {
                     {/* Status de Conexão */}
                     <div className="mb-3">
                       <div className="d-flex flex-wrap gap-2">
-                        {getConnectionBadge(client.googleAnalyticsConnected, 'Analytics')}
-                        {getConnectionBadge(client.googleAdsConnected, 'Google Ads')}
-                        {getConnectionBadge(client.facebookAdsConnected, 'Meta Ads')}
+                        {getConnectionBadge(client.googleAnalytics?.connected, 'Analytics')}
+                        {getConnectionBadge(client.googleAds?.connected, 'Google Ads')}
+                        {getConnectionBadge(client.facebookAds?.connected, 'Meta Ads')}
                       </div>
                     </div>
 
@@ -279,7 +275,7 @@ const DashboardsList = () => {
                         </div>
                         <div className="col-6">
                           <h6 className="mb-1 text-success">
-                            {formatDate(getLastSyncDate(client))}
+                            {formatLastSync(getLastSyncDate(client))}
                           </h6>
                           <small className="text-muted">Última Sincronização</small>
                         </div>
