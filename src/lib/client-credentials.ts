@@ -44,7 +44,7 @@ export async function saveGoogleAdsCredentials(
     const encryptedCredentials = encryptCredentials(credentials);
     
     // Update client using slug with MongoDB
-    await Client.findOneAndUpdate(
+    await (Client as any).findOneAndUpdate(
       { slug: clientSlug },
       {
         'googleAds.customerId': credentials.customerId,
@@ -74,7 +74,7 @@ export async function saveFacebookAdsCredentials(
     const encryptedCredentials = encryptCredentials(credentials);
     
     // Update client using slug with MongoDB
-    await Client.findOneAndUpdate(
+    await (Client as any).findOneAndUpdate(
       { slug: clientSlug },
       {
         'facebookAds.adAccountId': credentials.adAccountId,
@@ -105,7 +105,7 @@ export async function saveGoogleAnalyticsCredentials(
     const encryptedCredentials = encryptCredentials(credentials);
     
     // Update client using slug with MongoDB
-    await Client.findOneAndUpdate(
+    await (Client as any).findOneAndUpdate(
       { slug: clientSlug },
       {
         'googleAnalytics.propertyId': credentials.propertyId,
@@ -195,7 +195,7 @@ export async function testGoogleAdsConnection(clientSlug: string): Promise<boole
     const isConnected = !!(credentials.customerId && credentials.developerId);
     
     // Update connection status using slug with MongoDB
-    await Client.findOneAndUpdate(
+    await (Client as any).findOneAndUpdate(
       { slug: clientSlug },
       {
         'googleAds.connected': isConnected,
@@ -225,7 +225,7 @@ export async function testFacebookAdsConnection(clientSlug: string): Promise<boo
     const isConnected = !!(credentials.adAccountId && credentials.appId);
     
     // Update connection status using slug with MongoDB
-    await Client.findOneAndUpdate(
+    await (Client as any).findOneAndUpdate(
       { slug: clientSlug },
       {
         'facebookAds.connected': isConnected,
@@ -255,7 +255,7 @@ export async function testGoogleAnalyticsConnection(clientSlug: string): Promise
     const isConnected = !!(credentials.propertyId && (credentials.serviceAccountKey || credentials.clientEmail));
     
     // Update connection status using slug with MongoDB
-    await Client.findOneAndUpdate(
+    await (Client as any).findOneAndUpdate(
       { slug: clientSlug },
       {
         'googleAnalytics.connected': isConnected,
@@ -316,7 +316,7 @@ export async function removeClientCredentials(clientSlug: string, platform?: 'go
       updateData['googleAnalytics.connected'] = false;
     }
     
-    await Client.findOneAndUpdate(
+    await (Client as any).findOneAndUpdate(
       { slug: clientSlug },
       updateData
     );

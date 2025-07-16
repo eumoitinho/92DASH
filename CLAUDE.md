@@ -17,3 +17,4 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
   - Plan to migrate current data storage to MongoDB
   - Evaluate schema design for existing dashboard data
   - Consider performance and scalability improvements with document-based database
+- apis funcionando
