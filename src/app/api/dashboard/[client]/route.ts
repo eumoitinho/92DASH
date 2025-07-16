@@ -10,7 +10,7 @@ import type {
   Client,
   DashboardSummary 
 } from '@/types/dashboard';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { authOptions } from '@/lib/auth';
 
 /**
  * GET /api/dashboard/[client]

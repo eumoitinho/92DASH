@@ -29,7 +29,8 @@
       "Bash(pnpm run:*)",
       "Bash(grep:*)",
       "Bash(pnpm prisma generate:*)",
-      "Bash(npm cache clean:*)"
+      "Bash(npm cache clean:*)",
+      "Bash(tree:*)"
     ],
     "deny": []
   }

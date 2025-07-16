@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { Client, findClientBySlug } from '@/lib/mongodb';
+import { Client, findClientBySlug, connectToDatabase } from '@/lib/mongodb';
 
 export async function POST(request: NextRequest, { params }: { params: Promise<{ clientId: string }> }) {
   try {
+    await connectToDatabase();
+    
     const resolvedParams = await params;
     const { clientId } = resolvedParams;
     const { platform, connected, lastSync, connectionData } = await request.json();
@@ -39,8 +41,8 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     }
     
     // Atualizar cliente no banco
-    const updatedClient = await Client.findByIdAndUpdate(
-      client._id,
+    const updatedClient = await (Client as any).findOneAndUpdate(
+      { _id: client._id },
       updateData,
       { new: true }
     );
