@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Verificar se o cliente existe
-    const client = await prisma.client.findUnique({
+    const client = await //prisma.client.findUnique({
       where: { slug: clientSlug }
     });
 

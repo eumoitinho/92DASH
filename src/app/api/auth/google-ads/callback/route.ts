@@ -62,7 +62,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Salvar tokens no banco de dados (criptografados)
-    const client = await prisma.client.update({
+    const client = await //prisma.client.update({
       where: { slug: state },
       data: {
         googleAdsConnected: true,

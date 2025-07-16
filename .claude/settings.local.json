@@ -30,7 +30,8 @@
       "Bash(grep:*)",
       "Bash(pnpm prisma generate:*)",
       "Bash(npm cache clean:*)",
-      "Bash(tree:*)"
+      "Bash(tree:*)",
+      "Bash(sed:*)"
     ],
     "deny": []
   }

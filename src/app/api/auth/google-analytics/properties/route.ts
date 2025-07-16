@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Buscar cliente e suas credenciais
-    const client = await prisma.client.findUnique({
+    const client = await //prisma.client.findUnique({
       where: { slug: clientSlug }
     });
 
@@ -69,7 +69,7 @@ export async function GET(request: NextRequest) {
     if (error.code === 401) {
       const clientSlug = new URL(request.url).searchParams.get('clientSlug');
       if (clientSlug) {
-        await prisma.client.update({
+        await //prisma.client.update({
           where: { slug: clientSlug },
           data: {
             googleAnalyticsConnected: false,

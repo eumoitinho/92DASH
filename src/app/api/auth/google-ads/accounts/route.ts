@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { connectToDatabase, Client } from '@/lib/mongodb';
 
 /**
  * GET /api/auth/google-ads/accounts?clientSlug=client-name
@@ -16,12 +17,12 @@ export async function GET(request: NextRequest) {
       }, { status: 400 });
     }
 
+    await connectToDatabase();
+    
     // Buscar cliente e suas credenciais
-    const client = await prisma.client.findUnique({
-      where: { slug: clientSlug }
-    });
+    const client = await (Client as any).findOne({ slug: clientSlug });
 
-    if (!client || !client.googleAdsConnected || !client.googleAdsCredentials) {
+    if (!client || !client.googleAds?.connected || !client.googleAds?.encryptedCredentials) {
       return NextResponse.json({
         error: 'CLIENT_NOT_AUTHORIZED',
         message: 'Cliente não está autorizado no Google Ads'
@@ -29,7 +30,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Recuperar tokens salvos
-    const credentials = JSON.parse(client.googleAdsCredentials);
+    const credentials = JSON.parse(client.googleAds.encryptedCredentials);
     
     if (!credentials.refresh_token) {
       return NextResponse.json({
@@ -151,7 +152,7 @@ export async function GET(request: NextRequest) {
     if (error.code === 401 || error.message?.includes('invalid_grant')) {
       const clientSlug = new URL(request.url).searchParams.get('clientSlug');
       if (clientSlug) {
-        await prisma.client.update({
+        await //prisma.client.update({
           where: { slug: clientSlug },
           data: {
             googleAdsConnected: false,
